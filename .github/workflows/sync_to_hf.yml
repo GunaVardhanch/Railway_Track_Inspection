@@ -1,0 +1,48 @@
+name: Sync to Hugging Face Spaces
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code with Git LFS
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Verify Git LFS files
+        run: |
+          git lfs pull
+          ls -lh weights/best.pt
+
+      - name: Push to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE_REPO: ${{ vars.HF_SPACE_REPO }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::HF_TOKEN secret is not set. Please add HF_TOKEN to your GitHub repository Secrets (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+
+          # Target space format: <hf-username-or-org>/<space-name>
+          # If HF_SPACE_REPO is set as a repo variable, use that.
+          # Otherwise default to "${{ github.repository_owner }}/Railway_Track_Inspection"
+          SPACE_REPO="${HF_SPACE_REPO:-${{ github.repository_owner }}/Railway_Track_Inspection}"
+          
+          echo "Syncing repository and LFS objects to Hugging Face Space: $SPACE_REPO"
+          
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          
+          # Add Hugging Face Space remote with authentication
+          git remote add space "https://oauth2:${HF_TOKEN}@huggingface.co/spaces/${SPACE_REPO}"
+          
+          # Upload Git LFS objects and branch history
+          git lfs push --all space main
+          git push --force --prune space main
