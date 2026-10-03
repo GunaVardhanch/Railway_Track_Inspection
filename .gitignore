@@ -1,0 +1,29 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache & compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Streamlit secrets & config (keep credentials private)
+.streamlit/secrets.toml
+.streamlit/credentials.toml
+
+# OS & IDE metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Temporary video outputs & caches
+*.tmp
+*.mp4.tmp
+temp/
+scratch/
