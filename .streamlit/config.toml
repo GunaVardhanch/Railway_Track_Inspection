@@ -1,5 +1,4 @@
 [server]
-port = 7860
 enableCORS = false
 enableXsrfProtection = true
 maxUploadSize = 300

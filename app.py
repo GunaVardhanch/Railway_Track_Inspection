@@ -840,7 +840,7 @@ def main():
                         verified_incidents = pipeline.get_verified_incidents()
                         st.markdown("---")
                         st.markdown("### 📑 Final Verified Anomaly Report")
-                        st.write(f"Displaying all logged incidents across flight (Verified filter: $\ge$ {persistence_slider} frame(s)).")
+                        st.write(f"Displaying all logged incidents across flight (Verified filter: >= {persistence_slider} frame(s)).")
 
                         df_final = incidents_to_dataframe(all_final_incidents, min_persistence=persistence_slider)
                         if not df_final.empty:
